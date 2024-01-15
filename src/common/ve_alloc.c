@@ -15,8 +15,10 @@
 * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU Lesser General Public License for more details.
 */
+#include "CdxConfig.h"
 #include <ve.h>
 
+#if (CONFIG_MEMORY_DRIVER == OPTION_MEMORY_DRIVER_VE)
 int  ve_alloc_open()
 {
     return 0;
@@ -52,4 +54,4 @@ void ve_flush_cache(void* startAddr, int size)
 {
     VeFlushCache(startAddr, size);
 }
-
+#endif
