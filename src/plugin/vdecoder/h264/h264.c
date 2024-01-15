@@ -18,6 +18,15 @@
 #include "h264_dec.h"
 #include "h264_hal.h"
 
+void* (*MemPalloc)(int nSize);
+void  (*MemPfree)(void* pMem);
+void  (*MemFlushCache)(void* pMem, int nSize);
+void* (*MemGetPhysicAddress)(void* pVirtualAddress);
+void  (*MemSet)(void* pMem, int nSize, int nValue);
+void  (*MemCopy)(void* pMemDst, void* pMemSrc, int nSize);
+int  (*MemRead)(void* pMemSrc, void* pMemDst, int nSize);
+int  (*MemWrite)(void* pMemSrc, void* pMemDst, int nSize);
+
 int H264DecoderInit(DecoderInterface* pSelf, VConfig* pConfig, VideoStreamInfo* pVideoInfo);
 void Destroy(DecoderInterface* pSelf);
 void H264DecoderRest(DecoderInterface* pSelf);

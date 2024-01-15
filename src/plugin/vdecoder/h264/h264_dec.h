@@ -407,14 +407,14 @@ typedef struct H264_DECODER
 
 //* memory methods.
 
-void* (*MemPalloc)(int nSize);
-void  (*MemPfree)(void* pMem);
-void  (*MemFlushCache)(void* pMem, int nSize);
-void* (*MemGetPhysicAddress)(void* pVirtualAddress);
-void  (*MemSet)(void* pMem, int nSize, int nValue);
-void  (*MemCopy)(void* pMemDst, void* pMemSrc, int nSize);
-int  (*MemRead)(void* pMemSrc, void* pMemDst, int nSize);
-int  (*MemWrite)(void* pMemSrc, void* pMemDst, int nSize);
+extern void* (*MemPalloc)(int nSize);
+extern void  (*MemPfree)(void* pMem);
+extern void  (*MemFlushCache)(void* pMem, int nSize);
+extern void* (*MemGetPhysicAddress)(void* pVirtualAddress);
+extern void  (*MemSet)(void* pMem, int nSize, int nValue);
+extern void  (*MemCopy)(void* pMemDst, void* pMemSrc, int nSize);
+extern int  (*MemRead)(void* pMemSrc, void* pMemDst, int nSize);
+extern int  (*MemWrite)(void* pMemSrc, void* pMemDst, int nSize);
 
 
 #ifdef __cplusplus

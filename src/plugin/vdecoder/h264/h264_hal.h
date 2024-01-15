@@ -333,28 +333,28 @@ typedef struct
 }reg_frame_struct_ref_info;
 
 
-reg_avc_pSps                     avc_sps_reg00;
-reg_avc_pPps                     avc_pps_reg04;
-reg_shs                          shs_reg08;
-reg_shs2                         shs2_reg0c;
-reg_shs_wp                       shs_wp_reg10;
-reg_shs_qp                       shs_qp_reg1c;
-reg_function_ctrl                func_ctrl_reg20;
-reg_trigger_type                 trigger_type_reg24;
-reg_function_status              func_status_reg28;
-reg_cur_mb_num                   cur_mb_num_reg2c;
-reg_vld_bitstrem_addr            vld_bitstream_addr_reg30;
-reg_vld_offset                   vld_offset_reg34;
-reg_vld_bit_length               vld_bit_length_reg38;
-reg_vld_end_addr                 vld_end_addr_reg3c;
-reg_shs_reconstruct_frmbuf_index shs_recon_frmbuf_index_reg4c;
-reg_mb_field_intra_info_addr     mb_field_intra_info_addr_reg50;
-reg_mb_neighbor_info_addr        mb_neighbor_info_addr_reg54;
-reg_mb_addr                      mb_addr_reg60;
-reg_error_case                   error_case_regb8;
-reg_sram_port_rw_offset          sram_port_rw_offset_rege0;
-reg_sram_port_rw_data            sram_port_rw_data_rege4;
-reg_frame_struct_ref_info        frame_struct_ref_info_rege4;
+extern reg_avc_pSps                     avc_sps_reg00;
+extern reg_avc_pPps                     avc_pps_reg04;
+extern reg_shs                          shs_reg08;
+extern reg_shs2                         shs2_reg0c;
+extern reg_shs_wp                       shs_wp_reg10;
+extern reg_shs_qp                       shs_qp_reg1c;
+extern reg_function_ctrl                func_ctrl_reg20;
+extern reg_trigger_type                 trigger_type_reg24;
+extern reg_function_status              func_status_reg28;
+extern reg_cur_mb_num                   cur_mb_num_reg2c;
+extern reg_vld_bitstrem_addr            vld_bitstream_addr_reg30;
+extern reg_vld_offset                   vld_offset_reg34;
+extern reg_vld_bit_length               vld_bit_length_reg38;
+extern reg_vld_end_addr                 vld_end_addr_reg3c;
+extern reg_shs_reconstruct_frmbuf_index shs_recon_frmbuf_index_reg4c;
+extern reg_mb_field_intra_info_addr     mb_field_intra_info_addr_reg50;
+extern reg_mb_neighbor_info_addr        mb_neighbor_info_addr_reg54;
+extern reg_mb_addr                      mb_addr_reg60;
+extern reg_error_case                   error_case_regb8;
+extern reg_sram_port_rw_offset          sram_port_rw_offset_rege0;
+extern reg_sram_port_rw_data            sram_port_rw_data_rege4;
+extern reg_frame_struct_ref_info        frame_struct_ref_info_rege4;
 
 #ifdef __cplusplus
 }
