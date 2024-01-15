@@ -3,7 +3,7 @@ include $(top_srcdir)/Makefile.am.inc
 
 pkglib_LTLIBRARIES = libcedar_common.la
   
-libcedar_common_la_SOURCES = memoryAdapter.c \
+libcedar_common_la_SOURCES = memoryAdapter.c ion_alloc.c \
 						   ve.c \
 						   ve_alloc.c   
  

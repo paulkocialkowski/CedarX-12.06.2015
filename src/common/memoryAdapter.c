@@ -188,7 +188,7 @@ void* MemAdapterGetPhysicAddress(void* pVirtualAddress)
 #if CONFIG_MEMORY_DRIVER == OPTION_MEMORY_DRIVER_SUNXIMEM
     return (void*)(sunxi_alloc_vir2phy(pVirtualAddress) - PHY_OFFSET);
 #elif ((CONFIG_MEMORY_DRIVER == OPTION_MEMORY_DRIVER_ION) || CONFIG_MEMORY_DRIVER == OPTION_MEMORY_DRIVER_ION_LINUX_3_10)
-    return (void*)(ion_alloc_vir2phy(pVirtualAddress) - PHY_OFFSET);
+    return (void*)(ion_alloc_vir2phy(pVirtualAddress));
 #elif (CONFIG_MEMORY_DRIVER == OPTION_MEMORY_DRIVER_VE)
     return (void *)(ve_alloc_vir2phy(pVirtualAddress));
 #else
@@ -201,7 +201,7 @@ void* MemAdapterGetPhysicAddress(void* pVirtualAddress)
 void* MemAdapterGetVirtualAddress(void* pPhysicAddress)
 {
     //* transform the physic address for modules to physic address for cpu.
-    long nPhysicAddressForCpu = (long)pPhysicAddress + PHY_OFFSET;
+    long nPhysicAddressForCpu = (long)pPhysicAddress;
 #if CONFIG_MEMORY_DRIVER == OPTION_MEMORY_DRIVER_SUNXIMEM
     return (void*)sunxi_alloc_phy2vir((void*)nPhysicAddressForCpu);
 #elif ((CONFIG_MEMORY_DRIVER == OPTION_MEMORY_DRIVER_ION) || CONFIG_MEMORY_DRIVER == OPTION_MEMORY_DRIVER_ION_LINUX_3_10)
