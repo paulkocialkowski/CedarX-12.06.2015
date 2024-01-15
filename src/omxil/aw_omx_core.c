@@ -57,7 +57,7 @@ OMX_API void* get_omx_component_factory_fn(void);
  * Returns strlen(src); if retval >= siz, truncation occurred.
  */
 
-static size_t strlcpy(char *dst, const char *src, size_t siz)
+static size_t aw_strlcpy(char *dst, const char *src, size_t siz)
 {
     register char *d = dst;
     register const char *s = src;
@@ -700,7 +700,7 @@ OMX_API OMX_ERRORTYPE OMX_APIENTRY OMX_ComponentNameEnum(OMX_OUT OMX_STRING comp
 	logi("OMXCORE API - OMX_ComponentNameEnum %x %d %d\n",(unsigned) componentName, (unsigned)nameLen, (unsigned)index);
 	if(index < SIZE_OF_CORE)
 	{
-		strlcpy(componentName, core[index].name, nameLen);
+		aw_strlcpy(componentName, core[index].name, nameLen);
 	}
 	else
 	{
@@ -777,7 +777,7 @@ OMX_API OMX_ERRORTYPE OMX_GetComponentsOfRole(OMX_IN OMX_STRING role, OMX_INOUT 
 			{
 				if(!strcmp(role,core[i].roles[j]))
 				{
-					strlcpy((char *)compNames[*numComps], core[i].name, OMX_MAX_STRINGNAME_SIZE);
+					aw_strlcpy((char *)compNames[*numComps], core[i].name, OMX_MAX_STRINGNAME_SIZE);
 					(*numComps)++;
 					break;
 				}
@@ -868,7 +868,7 @@ OMX_API OMX_ERRORTYPE OMX_GetRolesOfComponent(OMX_IN OMX_STRING compName, OMX_IN
 				{
 					if(roles && roles[*numRoles])
 					{
-						strlcpy((char *)roles[*numRoles],core[i].roles[j],OMX_MAX_STRINGNAME_SIZE);
+						aw_strlcpy((char *)roles[*numRoles],core[i].roles[j],OMX_MAX_STRINGNAME_SIZE);
 					}
 
 					(*numRoles)++;
