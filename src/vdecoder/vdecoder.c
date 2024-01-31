@@ -121,9 +121,6 @@ void DestroyVideoDecoder(VideoDecoder* pDecoder)
     if(p->pSbm != NULL)
         SbmDestroy(p->pSbm);
 
-    if(p->pSbm != NULL)
-        SbmDestroy(p->pSbm);
-    
     AdpaterRelease();
     
     free(p);
