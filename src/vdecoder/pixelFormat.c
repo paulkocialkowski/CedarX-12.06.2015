@@ -297,6 +297,81 @@ void ConvertMb32420ToNv21C(char* pSrc,char* pDst,int nPicWidth, int nPicHeight)
 }
 
 
+void ConvertMb32420ToNv12C(char* pSrc,char* pDst,int nPicWidth, int nPicHeight)
+{
+	int nMbWidth = 0;
+	int nMbHeight = 0;
+	int i = 0;
+	int j = 0;
+	int m = 0;
+	int k = 0;
+    int nLineStride=0;
+    int lineNum = 0;
+    int offset = 0;
+    char* ptr = NULL;
+    char *dst0Asm = NULL;
+    char *dst1Asm = NULL;
+    char *srcAsm = NULL;
+    char bufferV[16], bufferU[16];
+    int nWidth = 0;
+    int nHeight = 0;
+
+    nWidth = (nPicWidth+1)/2;
+    nHeight = (nPicHeight+1)/2;
+
+    nLineStride = (nWidth*2 + 15) &~15;
+    nMbWidth = (nWidth*2+31)&~31;
+    nMbWidth /= 32;
+
+    nMbHeight = (nHeight+31)&~31;
+    nMbHeight /= 32;
+
+
+    ptr = pSrc;
+
+    for(i=0; i<nMbHeight; i++)
+    {
+    	for(j=0; j<nMbWidth; j++)
+    	{
+    		for(m=0; m<32; m++)
+    		{
+    			if((i*32 + m) >= nHeight)
+    			{
+    				ptr += 32;
+    				continue;
+        		}
+
+    			dst0Asm = bufferV;
+    			dst1Asm = bufferU;
+    			srcAsm = ptr;
+    			lineNum = i*32 + m;           //line num
+    			offset =  lineNum*nLineStride + j*32;
+
+    			asm volatile(
+    					"vld2.8         {d0-d3}, [%[srcAsm]]              \n\t"
+    			    	"vst1.8         {d0,d1}, [%[dst0Asm]]              \n\t"
+    			    	"vst1.8         {d2,d3}, [%[dst1Asm]]              \n\t"
+    			    	: [dst0Asm] "+r" (dst0Asm), [dst1Asm] "+r" (dst1Asm), [srcAsm] "+r" (srcAsm)
+    			        :  //[srcY] "r" (srcY)
+    			        : "cc", "memory", "d0", "d1", "d2", "d3", "d4", "d5", "d6", "d16", "d17", "d18", "d19", "d20", "d21", "d22", "d23", "d24", "d28", "d29", "d30", "d31"
+    			     );
+    			ptr += 32;
+
+
+    			for(k=0; k<16; k++)
+    			{
+    				if((j*32+ 2*k) >= nLineStride)
+    				{
+    					break;
+    				}
+    				pDst[offset+2*k]   = bufferV[k];
+    			   	pDst[offset+2*k+1] = bufferU[k];
+    			}
+    		}
+    	}
+    }
+}
+
 #if 0
 void ConvertMb32420ToNv21C(char* pSrc,char* pDst,int nPicWidth, int nPicHeight)
 {
@@ -1010,6 +1085,16 @@ void ConvertPixelFormat(VideoPicture* pPictureIn, VideoPicture* pPictureOut)
 			nMemSizeC = nMemSizeY>>2;
 			memcpy(pPictureOut->pData0+nMemSizeY, pPictureIn->pData0+nMemSizeY+nMemSizeC, nMemSizeC);
 			memcpy(pPictureOut->pData0+nMemSizeY+nMemSizeC, pPictureIn->pData0+nMemSizeY, nMemSizeC);
+		}
+	}
+	else if(pPictureOut->ePixelFormat==PIXEL_FORMAT_NV12)
+	{
+		if(pPictureIn->ePixelFormat == PIXEL_FORMAT_YUV_MB32_420)
+		{
+			nMemSizeY = nLineStride*nHeight16Align;
+			nMemSizeC = nMemSizeY>>2;
+			ConvertMb32420ToNv21Y(pPictureIn->pData0,pPictureOut->pData0,pPictureIn->nWidth, pPictureIn->nHeight);
+			ConvertMb32420ToNv12C(pPictureIn->pData1,pPictureOut->pData0+nMemSizeY,pPictureIn->nWidth, pPictureIn->nHeight);
 		}
 	}
 	else if(pPictureOut->ePixelFormat==PIXEL_FORMAT_NV21)
