@@ -4,7 +4,6 @@ include $(top_srcdir)/Makefile.am.inc
 pkglib_LTLIBRARIES = libcedar_omxadapter.la
   
 libcedar_omxadapter_la_SOURCES = aw_omx_core.c \
-								 transform_color_format.c \
 								 omx_vdec.cpp  \
 								 aw_registry_table.c  \
 								 omx_core_cmp.cpp 

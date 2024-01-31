@@ -4,7 +4,6 @@ include $(top_srcdir)/Makefile.am.inc
 pkglib_LTLIBRARIES = libcedar_vdecoder.la
  
 libcedar_vdecoder_la_SOURCES = adapter.c \
-							   pixelFormat.c \
 							   fbm.c \
 							   sbm.c \
 							   vdecoder.c \
