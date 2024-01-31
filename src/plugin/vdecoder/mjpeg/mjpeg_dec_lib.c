@@ -16,6 +16,10 @@
 */
 #include "mjpeg_dec_lib.h"
 
+#include <stdint.h>
+#include <inttypes.h>
+#include <time.h>
+
 extern int32_t InitJpegHw(JpegDec* jpgctx);
 extern int32_t SetJpegFormat(JpegDec* jpgctx);
 extern int32_t JpegHwDec(JpegDec* jpgctx);
@@ -125,6 +129,8 @@ int32_t JpegMallocFrmBuffer(MjpegDecodeContext* pMjpegContext, JpegDec* jpgctx)
 	int32_t nAlignValue = 0;
     int32_t nProgressiveFlag = 1;
     FbmCreateInfo mFbmCreateInfo;
+
+    logi("JpegMallocFrmBuffer");
 
 	#define MJPEG_FRM_BUF_NUM 8
 
@@ -506,13 +512,23 @@ int32_t JpegReadMarkers(JpegDec* jpgctx)
 	}
 }
 
+#define time_diff(tb, ta) \
+       ((ta.tv_sec * 1000000000UL + ta.tv_nsec) - (tb.tv_sec * 1000000000UL + tb.tv_nsec))
+
 int32_t JpegDecoderMain(MjpegDecodeContext* pMjpegContext,  JpegDec* jpgctx)
 {	
+	struct timespec ts_before, ts_after;
+	uint64_t ts_diff;
+
 	int32_t ret;
+
+	clock_gettime(CLOCK_MONOTONIC, &ts_before);
 
 	jpgctx->sawSOI = 0;
 	jpgctx->sawSOF = 0;
 	jpgctx->unreadMarker = 0;
+
+    logi("JpegDecoderMain");
 
 	ret = JpegReadMarkers(jpgctx);
 	if(JPEG_PARSER_OK != ret)
@@ -524,14 +540,24 @@ int32_t JpegDecoderMain(MjpegDecodeContext* pMjpegContext,  JpegDec* jpgctx)
 	{
 		return -1;//DEC_ERROR;
 	}
+
+	clock_gettime(CLOCK_MONOTONIC, &ts_after);
+	ts_diff = time_diff(ts_before, ts_after) / 1000;
+	printf("JPEG setup time: %"PRIu64" us\n", ts_diff);
+	ts_before = ts_after;
+
 	if(jpgctx->pFbm == NULL)
 	{
+    logi("JpegDecoderMain: no fbm");
+
 		ret = JpegMallocFrmBuffer(pMjpegContext,jpgctx);
 		if(ret !=  VDECODE_RESULT_OK)
 		{
 			return ret;
 		}
-	}
+	} else {
+    logi("JpegDecoderMain: already have fbm");
+}
 
 	jpgctx->pRefPicture =  FbmRequestBuffer(jpgctx->pFbm);
 	if(jpgctx->pRefPicture == NULL)
@@ -539,18 +565,33 @@ int32_t JpegDecoderMain(MjpegDecodeContext* pMjpegContext,  JpegDec* jpgctx)
 		return VDECODE_RESULT_NO_FRAME_BUFFER;
 	}
 
+	clock_gettime(CLOCK_MONOTONIC, &ts_after);
+	ts_diff = time_diff(ts_before, ts_after) / 1000;
+	printf("JPEG FBM time: %"PRIu64" us\n", ts_diff);
+	ts_before = ts_after;
+
 	// step: decode the stream data
 	jpgctx->nRefPicLumaAddr = jpgctx->pRefPicture->phyYBufAddr;
 	jpgctx->nRefPicChromaAddr = jpgctx->pRefPicture->phyCBufAddr;
+
+    logi("JpegDecoderMain: go init jpeg hw");
 
 	if(!InitJpegHw(jpgctx))
 	{
 		return -1;//DEC_ERROR;
 	}
+    logi("JpegDecoderMain: go decode jpeg hw");
     if(!JpegHwDec(jpgctx))
     {
     	return -1;//DEC_ERROR;
     }
+    logi("JpegDecoderMain: all done!");
+
+	clock_gettime(CLOCK_MONOTONIC, &ts_after);
+	ts_diff = time_diff(ts_before, ts_after) / 1000;
+	printf("JPEG decode main time: %"PRIu64" us\n", ts_diff);
+	ts_before = ts_after;
+
 	return ret;
 }
 

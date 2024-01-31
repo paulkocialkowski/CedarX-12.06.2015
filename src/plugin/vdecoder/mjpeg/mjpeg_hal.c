@@ -15,6 +15,8 @@
 * GNU Lesser General Public License for more details.
 */
 
+#include <stdio.h>
+
 #include "mjpeg_dec_lib.h"
 #include "veregister.h"
 
@@ -411,6 +413,8 @@ int32_t InitJpegHw(JpegDec* jpgctx)
 	SYS_WriteDWord(MPEG_REG_JPG_YADDR, jpgctx->nRefPicLumaAddr);
 	SYS_WriteDWord(MPEG_REG_JPG_CADDR, jpgctx->nRefPicChromaAddr);
 
+	printf("JPEG YUV PHY %#x/%#x\n", jpgctx->nRefPicLumaAddr, jpgctx->nRefPicChromaAddr);
+
 	{
 		int32_t mcuHsize,mcuVsize;
 
@@ -427,6 +431,8 @@ int32_t InitJpegHw(JpegDec* jpgctx)
 
 	FillJpegHuffmanTable(jpgctx);
 	SYS_WriteDWord(MPEG_REG_VLD_END, (uint32_t)AdapterMemGetPhysicAddress((void*)(jpgctx->pVbvBase+jpgctx->nVbvSize-1)));
+
+	printf("VLD end PHY %x\n", (uint32_t)AdapterMemGetPhysicAddress((void*)(jpgctx->pVbvBase+jpgctx->nVbvSize-1)));
 
 	return 1;
 }
@@ -445,6 +451,9 @@ int32_t JpegHwDec(JpegDec* jpgctx)
 	SYS_WriteDWord(MPEG_REG_VLD_LEN, jpgctx->nFrameSize<<3);
 
 	tmp = (uint32_t)AdapterMemGetPhysicAddress((void*)jpgctx->pVbvBase);
+
+	printf("VLD start PHY %x\n", tmp);
+
 	tmp = (tmp>>28) | (tmp&0x0ffffff0);
 	SYS_WriteDWord(MPEG_REG_VLD_START,  7<<28 | tmp);
 

@@ -198,6 +198,7 @@ static Fbm* MjpegDecoderGetFbm(DecoderInterface* pSelf, int nIndex)
 
     if(pMjpegContext == NULL)
     {
+	loge("no pMjpegContext");
         return NULL;
     }
     else
@@ -207,7 +208,9 @@ static Fbm* MjpegDecoderGetFbm(DecoderInterface* pSelf, int nIndex)
         	if(pMjpegContext->pFbm != NULL)
         	{
         		return pMjpegContext->pFbm;
-        	}
+        	} else {
+	loge("no pMjpegContext->pFbm");
+}
         }
     }
     return NULL;
@@ -373,6 +376,7 @@ static int  MjpegDecoderDecode(DecoderInterface* pSelf,
 	{
 		ResetVeInternal(pMjpegContext->pVideoEngine);
 		ret = JpegDecoderMain(pMjpegContext, pMjpegDec);
+ logi("return from JpegDecoderMain with %d", ret);
 		if(ret == VDECODE_RESULT_NO_FRAME_BUFFER)
 		{
             if(stream != NULL)
@@ -386,6 +390,7 @@ static int  MjpegDecoderDecode(DecoderInterface* pSelf,
 		}
 		else
 		{
+ logi("MjpegDecoderDecode: LGTM");
 			bDispFrmFlag = 1;
 			pMjpegDec->nDecStep = MJPEG_DEC_PROCESS_RESULT;
 		}

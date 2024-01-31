@@ -521,10 +521,10 @@ VideoPicture* RequestPicture(VideoDecoder* pDecoder, int nStreamIndex)
     Fbm*                 pFbm;
     VideoPicture*        pPicture;
     
-    logi("RequestPicture, nStreamIndex=%d", nStreamIndex);
     
     p = (VideoDecoderContext*)pDecoder;
     
+    logi("RequestPicture, nStreamIndex=%d pFbm %#x", nStreamIndex, p->pFbm);
     pFbm = p->pFbm;
     if(pFbm == NULL)
     {

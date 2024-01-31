@@ -298,6 +298,7 @@ void FbmReturnBuffer(Fbm* pFbm, VideoPicture* pVPicture, int bValidPicture)
                 //* picture not been displayed yet.
                 if(bValidPicture)
                 {
+			loge("set picture %x in pValidPictureQueue", pVPicture);
                     FbmEnqueue(&pFbm->pValidPictureQueue, pFrameNode);
                     pFbm->nValidPictureNum++;
                     pFrameNode->bInValidPictureQueue = 1;
@@ -598,6 +599,8 @@ int FbmAllocatePictureBuffer(VideoPicture* pPicture, int* nAlignValue, int nWidt
     int   nLineStride;
     int   nHeight64Align;
 
+    logi("FbmAllocatePictureBuffer");
+
     ePixelFormat   = pPicture->ePixelFormat;
     nHeight16Align = (nHeight+15) & ~15;
     nHeight32Align = (nHeight+31) & ~31;
@@ -613,6 +616,7 @@ int FbmAllocatePictureBuffer(VideoPicture* pPicture, int* nAlignValue, int nWidt
         case PIXEL_FORMAT_YUV_MB32_420:
         case PIXEL_FORMAT_YUV_MB32_422:
         case PIXEL_FORMAT_YUV_MB32_444:
+		loge("allocate for MB32 pixel format");
             //* for decoder,
             //* height of Y component is required to be 32 aligned.
             //* height of UV component are both required to be 32 aligned.
